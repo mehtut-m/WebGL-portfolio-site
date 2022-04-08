@@ -84,7 +84,7 @@ export default class Sketch {
     this.scene.add(this.mesh);
 
     this.mesh.position.x = 300;
-    this.mesh.rotation.z = 0.5;
+    // this.mesh.rotation.z = 0.5;
   }
 
   resize() {
@@ -102,10 +102,10 @@ export default class Sketch {
   render() {
     this.time += 0.05;
     this.material.uniforms.time.value = this.time;
-    // this.material.uniforms.uProgress.value = this.settings.progress;
+    this.material.uniforms.uProgress.value = this.settings.progress;
 
     // Set Timeline Progression
-    this.tl.progress(this.settings.progress);
+    // this.tl.progress(this.settings.progress);
 
     this.mesh.rotation.x = this.time / 2000;
     this.mesh.rotation.y = this.time / 1000;
