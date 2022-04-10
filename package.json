@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ashthornton/asscroll": "^2.0.6",
+    "@barba/core": "^2.9.7",
     "dat.gui": "^0.7.9",
     "gsap": "^3.10.2",
     "three": "^0.139.2"
