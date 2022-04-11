@@ -40,7 +40,7 @@ export default class Sketch {
       disableRaf: true,
     });
     this.asscroll.enable({
-      horizontalScroll: true,
+      horizontalScroll: !document.body.classList.contains('b-inside'),
     });
 
     this.time = 0;
@@ -57,8 +57,85 @@ export default class Sketch {
   }
 
   barba() {
+    let that = this;
     barba.init({
-      //...
+      transitions: [
+        // Transition from HOME page
+        {
+          name: 'from-home-transition',
+          from: { namespace: ['home'] },
+          leave(data) {
+            // create your stunning leave animation here
+            that.asscroll.disable();
+            return gsap.timeline().to(data.current.container, {
+              opacity: 0,
+            });
+          },
+          enter(data) {
+            that.asscroll = new ASScroll({
+              disableRaf: true,
+              containerElement: data.next.container.querySelector(
+                '[asscroll-container]'
+              ),
+            });
+            that.asscroll.enable({
+              newScrollElements:
+                data.next.container.querySelector('.scroll-wrap'),
+            });
+
+            return gsap.timeline().from(data.next.container, {
+              opacity: 1,
+              onComplete: () => {
+                that.container.style.display = 'none';
+              },
+            });
+          },
+        },
+        {
+          name: 'from-inside-page-transition',
+          from: { namespace: ['inside'] },
+          leave(data) {
+            // create your stunning leave animation here
+            that.asscroll.disable();
+
+            return gsap
+              .timeline()
+              .to('.curtain', {
+                duration: 0.3,
+                y: 0,
+              })
+              .to(data.current.container, {
+                opacity: 0,
+              });
+          },
+          enter(data) {
+            that.asscroll = new ASScroll({
+              disableRaf: true,
+              containerElement: data.next.container.querySelector(
+                '[asscroll-container]'
+              ),
+            });
+            that.asscroll.enable({
+              horizontalScroll: true,
+              newScrollElements:
+                data.next.container.querySelector('.scroll-wrap'),
+            });
+
+            that.addObjects();
+            that.resize();
+
+            return gsap
+              .timeline()
+              .to('.curtain', {
+                duration: 0.3,
+                y: '-100%',
+              })
+              .from(data.next.container, {
+                opacity: 1,
+              });
+          },
+        },
+      ],
     });
   }
 
@@ -75,7 +152,7 @@ export default class Sketch {
     this.geometry = new THREE.PlaneBufferGeometry(1, 1, 100, 100);
 
     this.material = new THREE.ShaderMaterial({
-      //   wireframe: true,
+      // wireframe: true,
       uniforms: {
         time: { value: 1.0 },
         uProgress: { value: 0 },
@@ -112,7 +189,7 @@ export default class Sketch {
       this.materials.push(material);
 
       let texture = new THREE.TextureLoader().load(img.src);
-      // texture.needsUpdate = true;
+      texture.needsUpdate = true;
 
       material.uniforms.uTexture.value = texture;
 

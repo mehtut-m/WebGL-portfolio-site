@@ -127,7 +127,7 @@ figure img {
   top: 0;
   left: 0;
   z-index: 100;
-  background: #949494;
+  background: #000;
   transform: translate(0, 100%);
 }
 
